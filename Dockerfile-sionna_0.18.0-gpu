@@ -1,0 +1,21 @@
+FROM tensorflow/tensorflow:2.15.0-gpu-jupyter
+
+EXPOSE 8888
+
+# Set working directory to /app
+WORKDIR /app
+
+# Install necessary dependencies
+RUN apt-get update && \
+    apt-get install -y make llvm && \
+    rm -rf /var/lib/apt/lists/* && \
+    rm -rf /var/cache/apt/
+
+# Install Python dependencies
+RUN pip install --upgrade ipykernel jupyterlab
+
+# Install sionna 0.18.0
+RUN pip install sionna==0.18.0
+
+# Set up JupyterLab
+CMD ["jupyter", "lab", "--port=8888", "--no-browser", "--NotebookApp.token=''", "--ip=0.0.0.0", "--allow-root", "--NotebookApp.allow_origin='*'"]
