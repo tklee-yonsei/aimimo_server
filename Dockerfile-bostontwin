@@ -1,0 +1,18 @@
+FROM tensorflow/tensorflow:2.13.0-gpu-jupyter
+
+EXPOSE 8888
+
+RUN apt-get update
+RUN apt-get install -y llvm libegl1 libgl1 libgomp1
+RUN pip install --upgrade sionna
+RUN pip install --upgrade ipykernel
+RUN pip install --upgrade jupyterlab
+RUN pip install --upgrade geopandas shapely open3d open3d-cpu contextily
+
+# 추가된 패키지 설치
+RUN pip install pycollada
+
+# Set working directory to /app
+WORKDIR /app
+
+CMD ["jupyter", "lab", "--port=8888", "--no-browser", "--NotebookApp.token=''", "--ip=0.0.0.0", "--allow-root", "--NotebookApp.allow_origin='*'"]

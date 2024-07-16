@@ -10,24 +10,88 @@
 
 `Dockerfile-sionna_0.18.0-gpu` 파일을 통해 수행할 수 있습니다.
 
-#### 이미지 빌드
+#### Docker 이미지 빌드
 
 ```shell
 $ docker build -t sionna_0.18.0 -f Dockerfile-sionna_0.18.0-gpu .
 ```
 
-#### 컨테이너 실행
+#### Docker 컨테이너 실행
 
 아래의 명령을 `[주피터 노트북이 저장될 경로]`를 변경하여 실행합니다. 절대 경로로 수정합니다.
 
 ```shell
-$ docker run -p 8888:8888 --privileged=true --gpus=all --mount type=bind,src="[주피터 노트북이 저장될 경로]",target="/app" --env NVIDIA_DRIVER_CAPABILITIES=graphics,compute,utility --rm -it --name sionna_0.18.0_container sionna_0.18.0
+$ docker run -p 8888:8888 --privileged=true --gpus=all \
+    --mount type=bind,src="[주피터 노트북이 저장될 경로]",target="/app/notes" \
+    --env NVIDIA_DRIVER_CAPABILITIES=graphics,compute,utility \
+    --rm -it --name sionna_0.18.0_container sionna_0.18.0
 ```
 
 예제는 다음과 같습니다.
 
 ```shell
-$ docker run -p 8888:8888 --privileged=true --gpus=all --mount type=bind,src="/home/tklee/aimimo_code/notes",target="/app" --env NVIDIA_DRIVER_CAPABILITIES=graphics,compute,utility --rm -it --name sionna_0.18.0_container sionna_0.18.0
+$ docker run -p 8888:8888 --privileged=true --gpus=all \
+    --mount type=bind,src="/home/tklee/aimimo_code/notes",target="/app/notes" \
+    --env NVIDIA_DRIVER_CAPABILITIES=graphics,compute,utility \
+    --rm -it --name sionna_0.18.0_container sionna_0.18.0
+```
+
+### boston_twin
+
+#### 셋업 및 다운로드
+
+[Pypi](https://pypi.org/)에 업로드 한 내용이 없으므로, 직접 소스코드를 활용해야 합니다.
+이 셋업 및 데이터세트 설정은 한 번만 수행하면 됩니다.
+
+1. Bostontwin을 받을 경로로 이동합니다. (가령, `/home/tklee/aimimo_code/boston_twin`으로 하고 싶은 경우, `/home/tklee/aimimo_code`으로 이동하여 git clone을 수행합니다.)
+
+2. [bostontwin](https://github.com/wineslab/boston_twin)에서 코드를 가져옵니다.
+
+```shell
+$ git clone https://github.com/wineslab/boston_twin.git
+```
+
+이 명령을 수행하여, 저는 `/home/tklee/aimimo_code/boston_twin` 이 경로에 Bostontwin을 받았습니다.
+
+3. 데이터셋 다운로드
+
+코드를 클론한 폴더(`/home/tklee/aimimo_code/boston_twin`)로 이동하여, 다음을 수행합니다.
+
+```shell
+$ mkdir bostontwin
+$ cd bostontwin
+$ wget https://repository.library.northeastern.edu/downloads/neu:4f232h94c?datastream_id=content -O BostonTwin_dataset.zip
+$ unzip BostonTwin_dataset.zip
+```
+
+#### Docker 이미지 빌드
+
+`aimimo_server` 폴더에서, `bostontwin` 이미지를 빌드합니다.
+
+```shell
+$ docker build -t boston_twin -f Dockerfile-bostontwin .
+```
+
+#### Docker 컨테이너 실행
+
+아래의 명령을 `[주피터 노트북이 저장될 경로]`를 변경하여 실행합니다. 절대 경로로 수정합니다.
+
+```shell
+$ docker run -p 8888:8888 --privileged=true --gpus=all \
+    --mount type=bind,src="[주피터 노트북이 저장될 경로]",target="/app/notes" \
+    --mount type=bind,src="/home/tklee/aimimo_code/boston_twin",target="/app" \
+    --env NVIDIA_DRIVER_CAPABILITIES=graphics,compute,utility \
+    --rm -it --name boston_twin_container boston_twin
+```
+
+예제는 다음과 같습니다.
+
+```shell
+$ docker run -p 8888:8888 --privileged=true --gpus=all \
+    --mount type=bind,src="/home/tklee/aimimo_code/notes",target="/app/notes" \
+    --mount type=bind,src="/home/tklee/aimimo_code/boston_twin",target="/app" \
+    --env NVIDIA_DRIVER_CAPABILITIES=graphics,compute,utility \
+    --rm -it --name boston_twin_container boston_twin
 ```
 
 ## (개발자 용) 코드 편집 및 활용
