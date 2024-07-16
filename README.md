@@ -18,6 +18,14 @@ $ docker build -t sionna_0.18.0 -f Dockerfile-sionna_0.18.0-gpu .
 
 #### 컨테이너 실행
 
+아래의 명령을 `[주피터 노트북이 저장될 경로]`를 변경하여 실행합니다. 절대 경로로 수정합니다.
+
+```shell
+$ docker run -p 8888:8888 --privileged=true --gpus=all --mount type=bind,src="[주피터 노트북이 저장될 경로]",target="/app" --env NVIDIA_DRIVER_CAPABILITIES=graphics,compute,utility --rm -it --name sionna_0.18.0_container sionna_0.18.0
+```
+
+예제는 다음과 같습니다.
+
 ```shell
 $ docker run -p 8888:8888 --privileged=true --gpus=all --mount type=bind,src="/home/tklee/aimimo_code/notes",target="/app" --env NVIDIA_DRIVER_CAPABILITIES=graphics,compute,utility --rm -it --name sionna_0.18.0_container sionna_0.18.0
 ```
