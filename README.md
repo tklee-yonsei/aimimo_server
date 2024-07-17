@@ -1,5 +1,66 @@
 # Server Setup
 
+## 세션 가이드
+
+### tmux
+
+세션을 유지하기 위해 `tmux` 또는 `screen`과 같은 것을 사용하기를 권장합니다.
+
+#### 세션 시작
+
+```shell
+$ tmux new -s [세션이름]
+```
+
+예제는 다음과 같습니다.
+
+```shell
+$ tmux new -s sionna_session
+```
+
+#### 세션 나가기
+
+현재 세션에서 나갈 수 있습니다.
+
+tmux 세션이 실행 중인 상태에서 `Ctrl` + `b` `d`를 누르면, 세션을 유지시킨 채 나올 수 있습니다.
+
+#### 세션 목록보기 및 재접속
+
+이런 식으로 목록을 확인할 수 있습니다.
+
+```shell
+$ tmux ls
+sionna_session: 1 windows (created Wed Jul 17 10:56:24 2024)
+```
+
+그리고 실행했던 세션에 재접속 할 수 있습니다.
+
+```shell
+$ tmux attach-session -t [세션이름]
+```
+
+예제는 다음과 같습니다.
+
+```shell
+$ tmux attach-session -t sionna_session
+```
+
+#### 세션 강제 종료
+
+세션에 재접속해서 `exit` 명령으로 종료시킬 수도 있으며,
+
+세션에 접속하지 않고도 다음과 같은 명령을 수행하여 세션을 종료할 수 있습니다.
+
+```shell
+$ tmux kill-session -t [세션이름]
+```
+
+예제는 다음과 같습니다.
+
+```shell
+$ tmux kill-session -t sionna_session
+```
+
 ## Docker 목록
 
 ### Sionna 0.18.0 (GPU)
@@ -17,6 +78,8 @@ $ docker build -t sionna_0.18.0 -f Dockerfile-sionna_0.18.0-gpu .
 ```
 
 #### Docker 컨테이너 실행
+
+컨테이너를 실행할 때, `tmux`로 세션을 만들고 수행하면, 이후 관리가 편리합니다.
 
 아래의 명령을 `[주피터 노트북이 저장될 경로]`를 변경하여 실행합니다. 절대 경로로 수정합니다.
 
@@ -73,6 +136,8 @@ $ docker build -t boston_twin -f Dockerfile-bostontwin .
 ```
 
 #### Docker 컨테이너 실행
+
+컨테이너를 실행할 때, `tmux`로 세션을 만들고 수행하면, 이후 관리가 편리합니다.
 
 아래의 명령을 `[주피터 노트북이 저장될 경로]`를 변경하여 실행합니다. 절대 경로로 수정합니다.
 
